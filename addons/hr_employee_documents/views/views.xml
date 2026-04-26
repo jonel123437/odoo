@@ -1,10 +1,11 @@
 <odoo>
     <data>
+        <!-- LIST VIEW: Table shown when clicking "Documents" in top nav -->
         <record id="view_hr_employee_document_list" model="ir.ui.view">
             <field name="name">hr.employee.document.list</field>
             <field name="model">hr.employee.document</field>
             <field name="arch" type="xml">
-                <list string="Documents">
+                <list string="Documents" edit="0" group_delete="false" group_create="false" group_edit="false">
                     <field name="name"/>
                     <field name="document_type"/>
                     <field name="issue_date"/>
@@ -15,6 +16,7 @@
             </field>
         </record>
 
+        <!-- FORM VIEW: Detail page shown when clicking a document row -->
         <record id="view_hr_employee_document_form" model="ir.ui.view">
             <field name="name">hr.employee.document.form</field>
             <field name="model">hr.employee.document</field>
@@ -22,6 +24,7 @@
                 <form string="Employee Document">
                     <sheet>
                         <group>
+                            <!-- Form left column -->
                             <group>
                                 <field name="name" readonly="source == 'builtin'"/>
                                 <field name="document_type" readonly="source == 'builtin'"/>
@@ -29,6 +32,7 @@
                                 <field name="state" readonly="source == 'builtin'"/>
                                 <field name="source" readonly="1"/>
                             </group>
+                            <!-- Form right column -->
                             <group>
                                 <field name="issue_date" readonly="source == 'builtin'"/>
                                 <field name="expiry_date" readonly="source == 'builtin'"/>
@@ -37,11 +41,12 @@
                                 <field name="attachment_filename" invisible="1"/>
                             </group>
                         </group>
+                        <!-- Notes section: hidden for Built-in docs -->
                         <group string="Notes" invisible="source == 'builtin'">
                             <field name="notes" nolabel="1"/>
                         </group>
-                        <div invisible="source != 'builtin'"
-                             class="alert alert-warning">
+                        <!-- Warning banner: only visible for Built-in docs -->
+                        <div invisible="source != 'builtin'" class="alert alert-warning">
                             This document is managed from the Employee Profile. 
                             To edit or delete it, go to the employee's profile page.
                         </div>
@@ -50,6 +55,9 @@
             </field>
         </record>
 
+        <!-- ACTION: Tells Odoo what to open when menu is clicked -->
+        <!-- view_mode: list = default view, form = when clicking a row -->
+        <!-- context group_by: Groups list by employee (accordion) -->
         <record id="action_hr_employee_document" model="ir.actions.act_window">
             <field name="name">Employee Documents</field>
             <field name="res_model">hr.employee.document</field>
@@ -57,6 +65,9 @@
             <field name="context">{'group_by': 'employee_id'}</field>
         </record>
 
+        <!-- MENU ITEM: "Documents" button in the Employees app top navigation bar -->
+        <!-- parent="hr.menu_hr_root" = Places it under Employees app -->
+        <!-- sequence="50" = Position order in the nav bar -->
         <menuitem id="menu_hr_employee_document"
                   name="Documents"
                   parent="hr.menu_hr_root"
